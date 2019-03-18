@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define PRODUCT_ID      0xB195
 #define DEVICE_VER      0x0001
 #define MANUFACTURER    flehrad
-#define PRODUCT         BigSwitch PCB
+#define PRODUCT         The Locker Big Switch
 #define DESCRIPTION     A single key board for Novelkeys Big Switch
 
 /* key matrix size */
@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifdef RGBLIGHT_ENABLE
 #define RGB_DI_PIN D3
 #define RGBLIGHT_ANIMATIONS
-#define RGBLED_NUM 8
+#define RGBLED_NUM 6
 #endif
 
 #endif

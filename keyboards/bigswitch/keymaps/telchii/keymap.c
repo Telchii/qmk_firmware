@@ -11,46 +11,57 @@ enum {
 static tap_dance_state_enum tap_dance_state;
 static bool tap_dance_active = false;
 static uint16_t timer;
+static bool key_triggered = false;
 
 void dance_cycle(bool override_timer) {
-  if (tap_dance_active)
+  /*if (tap_dance_active)
   {
     if (timer_elapsed(timer) > 100 || override_timer)
     {
-	  rgblight_enable_noeeprom();
-		
       switch (tap_dance_state)
       {
 		case SINGLE_TAP: 
 		{
-		  rgblight_setrgb(0xff, 0xff, 0xff);
+		  //rgblight_setrgb(0xff, 0xff, 0x0);
 		  break;
 		}
 		
         case SINGLE_HOLD:
         {
-		  rgblight_setrgb(0x0, 0xff, 0xff);
+		  //rgblight_setrgb(0x0, 0xff, 0xff);
           break;
         }
 
         case DOUBLE:
         {
-		  rgblight_setrgb(0xff, 0x0, 0xff);
+		  //rgblight_setrgb(0xff, 0x0, 0xff);
           break;
         }
 
         default:
-		  rgblight_setrgb(0x0, 0x0, 0x0);
+		  //rgblight_setrgb(0xff, 0xff, 0x0); //Same as single tap
           break;
       }
 
-      timer = timer_read();
+      //timer = timer_read();
+	  //rgblight_enable_noeeprom();
+	  //rgblight_enable();
+	  //key_triggered = true;
     }
+  }*/
+  
+  if(key_triggered && (timer_elapsed(timer) > 1750)) {
+	  rgblight_disable_noeeprom();
+	  key_triggered = false;
   }
 }
 
 void dance_finished(qk_tap_dance_state_t *state, void* user_data) {
   // Determine the current state
+  rgblight_enable();
+  rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING);
+  rgblight_sethsv_noeeprom(0x0, 0xff, 0x08);
+  
   switch (state->count)
   {
     case 1:
@@ -58,18 +69,21 @@ void dance_finished(qk_tap_dance_state_t *state, void* user_data) {
       // if (state->interrupted || state->pressed == 0) tap_dance_state = SINGLE_TAP;
       // else tap_dance_state = SINGLE_HOLD;
 	  tap_dance_state = SINGLE_TAP;
+	  //rgblight_setrgb(0xff, 0xff, 0x0);
       break;
     }
 	
     case 2:
     {
       tap_dance_state = DOUBLE;
+	  //rgblight_setrgb(0xff, 0x0, 0xff);
       break;
     }
 	
     default:
     {
-      tap_dance_state = DOUBLE;
+      tap_dance_state = SINGLE_TAP;
+	  //rgblight_setrgb(0xff, 0xff, 0xff);
       break;
     }
   }
@@ -95,7 +109,9 @@ void dance_finished(qk_tap_dance_state_t *state, void* user_data) {
 	}
   }
   
-  rgblight_disable_noeeprom();
+  timer = timer_read();
+  //rgblight_enable();
+  key_triggered = true;
 }
 
 void dance_reset(qk_tap_dance_state_t *state, void* user_data)
@@ -111,13 +127,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT(TD(TD_KEY))
 };
 
-void keyboard_post_init_user (void) {	  
-	rgblight_enable_noeeprom();
+void keyboard_post_init_user (void) {	 
+	rgblight_disable_noeeprom();
 	//rgblight_mode_noeeprom(RGBLIGHT_MODE_CHRISTMAS); //RGBLIGHT_MODE_STATIC_LIGHT
 	rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING);
-	rgblight_toggle();
-	rgblight_setrgb(0xff, 0xff, 0xff);
-	rgblight_sethsv_noeeprom(0x0, 0xff, 0x08);
+	//rgblight_setrgb(0xff, 0xff, 0xff);
+	//rgblight_sethsv_noeeprom(0x0, 0xff, 0x08);
 }
 
 void matrix_scan_user(void) {

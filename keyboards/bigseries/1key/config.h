@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define DIODE_DIRECTION ROW2COL
 
 /* Set 0 if debouncing isn't needed */
-#define DEBOUNCE 50
+#define DEBOUNCING_DELAY 50
 
 /* key combination for command */
 #define IS_COMMAND() ( \
